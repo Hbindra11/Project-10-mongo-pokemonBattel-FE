@@ -1,6 +1,6 @@
-import React from "react";
+//import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import Navbar from "./Components/Navbar";
 import Homepage from "./components/HomePage";
 import BattlePage from "./components/BattlePage";
 import DetailsPage from "./components/DetailsPage";
