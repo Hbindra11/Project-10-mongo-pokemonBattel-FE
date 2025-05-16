@@ -1,11 +1,11 @@
 //import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar";
-import Homepage from "./components/HomePage";
-import BattlePage from "./components/BattlePage";
-import DetailsPage from "./components/DetailsPage";
-import RosterPage from "./components/RosterPage";
-import LeaderboardPage from "./components/LeaderboardPage";
+import Homepage from "./Components/HomePage";
+import BattlePage from "./Components/BattlePage";
+import DetailsPage from "./Components/DetailsPage";
+import RosterPage from "./Components/RosterPage";
+import LeaderboardPage from "./Components/LeaderboardPage";
 
 const App = () => {
   return (
