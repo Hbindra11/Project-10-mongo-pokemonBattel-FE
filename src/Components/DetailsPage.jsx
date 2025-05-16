@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -6,7 +6,7 @@ const DetailsPage = () => {
   const { id } = useParams(); // Pokémon ID from the URL
   const [pokemon, setPokemon] = useState(null); // Pokémon details
   const [loading, setLoading] = useState(true); // Loading state
-  const navigate = useNavigate(); // Navigation
+ // const navigate = useNavigate(); // Navigation
 
   useEffect(() => {
     // Fetch Pokémon details from PokeAPI

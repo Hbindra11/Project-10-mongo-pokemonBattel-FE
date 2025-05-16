@@ -26,7 +26,7 @@ const LeaderboardPage = () => {
   const handelSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:3000/leaderboard", newScore)
+      .post("https://project-10-be.onrender.com/leaderboard", newScore)
       .then((res) => {
         console.log("here is the response: " + res.data);
         alert("data was successfully saved!");
