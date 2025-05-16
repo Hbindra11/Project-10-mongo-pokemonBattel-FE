@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 const RosterPage = () => {
@@ -8,7 +8,7 @@ const RosterPage = () => {
   // Fetch the roster from the backend when the component mounts
   useEffect(() => {
     axios
-      .get("http://localhost:3000/roster")
+      .get("https://project-10-be.onrender.com/roster")
       .then((response) => {
         setRoster(response.data); // Set the roster data
         setLoading(false); // Turn off loading state
@@ -22,7 +22,7 @@ const RosterPage = () => {
   // Remove a Pokémon from the roster
   const removeFromRoster = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/roster/${id}`); // Call DELETE endpoint
+      await axios.delete(`https://project-10-be.onrender.com/roster/${id}`); // Call DELETE endpoint
       setRoster(roster.filter((pokemon) => pokemon._id !== id)); // Update frontend state
       alert("Pokémon removed from roster!");
     } catch (error) {

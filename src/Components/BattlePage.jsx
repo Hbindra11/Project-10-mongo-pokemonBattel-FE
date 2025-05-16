@@ -10,7 +10,7 @@ const BattlePage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/roster")
+      .get("https://project-10-be.onrender.com/roster")
       .then((res) => {
         console.log(res.data);
         setMyPokemonlist(res.data);
