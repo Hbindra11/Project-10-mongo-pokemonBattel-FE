@@ -10,7 +10,7 @@ const LeaderboardPage = () => {
   setNewScore;
   useEffect(() => {
     axios
-      .get("http://localhost:3000/leaderboard")
+      .get("https://project-10-be.onrender.com/leaderboard")
       .then((res) => {
         console.log(res.data);
         setScore(res.data);
