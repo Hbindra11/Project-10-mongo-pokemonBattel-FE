@@ -106,7 +106,7 @@ const BattlePage = () => {
                   {playerPokemon.name}
                 </div>
               </h2>
-              <p> And I'm ready to fight!</p>
+              <p> And I&apos;m ready to fight!</p>
             </div>
             <figure>
               <img src={playerPokemon.image} alt="Player pokemon" />
@@ -124,7 +124,7 @@ const BattlePage = () => {
                   {computerPokemon.name}
                 </div>
               </h2>
-              <p> The Computer's Pokémon !</p>
+              <p> The Computer&apos;s Pokémon !</p>
             </div>
             <figure>
               <img src={computerPokemon.image} alt="Player pokemon" />
