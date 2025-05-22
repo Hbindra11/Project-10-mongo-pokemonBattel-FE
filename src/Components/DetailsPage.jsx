@@ -2,18 +2,20 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+// Component to display details of a single Pokémon
 const DetailsPage = () => {
-  const { id } = useParams(); // Pokémon ID from the URL
-  const [pokemon, setPokemon] = useState(null); // Pokémon details
-  const [loading, setLoading] = useState(true); // Loading state
- // const navigate = useNavigate(); // Navigation
+  const { id } = useParams(); // Get Pokémon ID from the URL parameters
+  const [pokemon, setPokemon] = useState(null); // State to store Pokémon details
+  const [loading, setLoading] = useState(true); // State to track loading status
+  // const navigate = useNavigate(); // Uncomment if navigation is needed
 
   useEffect(() => {
-    // Fetch Pokémon details from PokeAPI
+    // Fetch Pokémon details from the PokeAPI when component mounts or ID changes
     axios
       .get(`https://pokeapi.co/api/v2/pokemon/${id}`)
       .then((response) => {
         const data = response.data;
+        // Set Pokémon details in state
         setPokemon({
           name: data.name,
           image: data.sprites.front_default,
@@ -24,15 +26,16 @@ const DetailsPage = () => {
             value: stat.base_stat,
           })), // Extract stats
         });
-        setLoading(false);
+        setLoading(false); // Set loading to false after data is fetched
       })
       .catch((error) => {
+        // Handle errors during fetch
         console.error("Error fetching Pokémon details:", error);
         setLoading(false);
       });
   }, [id]);
 
-  // Add Pokémon to roster via backend
+  // Function to add Pokémon to the user's roster via backend API
   const addToRoster = async () => {
     try {
       const response = await axios.post("http://localhost:3000/roster", {
@@ -41,18 +44,21 @@ const DetailsPage = () => {
       });
       alert(response.data.message || "Pokémon added to roster!");
     } catch (error) {
+      // Handle errors from backend
       if (error.response && error.response.data.message) {
-        alert(error.response.data.message); // Show error from backend
+        alert(error.response.data.message);
       } else {
         alert("Error adding Pokémon to roster!");
       }
     }
   };
 
+  // Show loading message while fetching data
   if (loading) {
     return <p className="text-center text-xl">Loading Pokémon details...</p>;
   }
 
+  // Show message if no Pokémon data is found
   if (!pokemon) {
     return <p className="text-center text-xl">No Pokémon found.</p>;
   }
@@ -110,7 +116,7 @@ const DetailsPage = () => {
         </button>
       </div>
 
-      {/* Back to Homepage */}
+      {/* Back to Homepage (uncomment if navigation is needed) */}
       {/*<div className="text-center mt-6">
         <button
           onClick={() => navigate("/")}

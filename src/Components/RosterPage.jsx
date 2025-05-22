@@ -2,28 +2,28 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const RosterPage = () => {
-  const [roster, setRoster] = useState([]); // State to hold roster data
-  const [loading, setLoading] = useState(true); // Loading state
+  const [roster, setRoster] = useState([]); // Holds the roster data
+  const [loading, setLoading] = useState(true); // Indicates if data is loading
 
-  // Fetch the roster from the backend when the component mounts
+  // Fetch roster data from the backend when the component mounts
   useEffect(() => {
     axios
       .get("https://project-10-be.onrender.com/roster")
       .then((response) => {
-        setRoster(response.data); // Set the roster data
-        setLoading(false); // Turn off loading state
+        setRoster(response.data); // Update roster state with fetched data
+        setLoading(false); // Set loading to false after data is fetched
       })
       .catch((error) => {
         console.error("Error fetching roster:", error);
-        setLoading(false); // Turn off loading even if there's an error
+        setLoading(false); // Set loading to false even if there's an error
       });
   }, []);
 
-  // Remove a Pokémon from the roster
+  // Remove a Pokémon from the roster by its ID
   const removeFromRoster = async (id) => {
     try {
-      await axios.delete(`https://project-10-be.onrender.com/roster/${id}`); // Call DELETE endpoint
-      setRoster(roster.filter((pokemon) => pokemon._id !== id)); // Update frontend state
+      await axios.delete(`https://project-10-be.onrender.com/roster/${id}`); // Send DELETE request to backend
+      setRoster(roster.filter((pokemon) => pokemon._id !== id)); // Remove Pokémon from local state
       alert("Pokémon removed from roster!");
     } catch (error) {
       console.error("Error removing Pokémon:", error);
@@ -31,12 +31,12 @@ const RosterPage = () => {
     }
   };
 
-  // Display loading spinner or message
+  // Show loading message while data is being fetched
   if (loading) {
     return <p className="text-center text-xl">Loading your roster...</p>;
   }
 
-  // Display a message if the roster is empty
+  // Show message if the roster is empty
   if (roster.length === 0) {
     return <p className="text-center text-xl">Your roster is empty!</p>;
   }

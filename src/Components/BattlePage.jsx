@@ -1,13 +1,18 @@
-
 import axios from "axios";
 import { useState, useEffect } from "react";
 
+// BattlePage component handles the Pokémon battle logic and UI
 const BattlePage = () => {
-  const [myPokemonlist, setMyPokemonlist] = useState([]); //all roster pokemeon are retrieved from mongodb roster
-  const [selectedPok, setSelectPok] = useState(""); //state to store the player selected pokemon
-  const [playerPokemon, setplayerPokemon] = useState(null); // Pokémon details
-  const [computerPokemon, setComputerPokemon] = useState(null); // Computer-selected Pokémon
+  // State to store the user's Pokémon roster fetched from MongoDB
+  const [myPokemonlist, setMyPokemonlist] = useState([]);
+  // State to store the selected Pokémon's name from the dropdown
+  const [selectedPok, setSelectPok] = useState("");
+  // State to store the selected player's Pokémon details (name, image)
+  const [playerPokemon, setplayerPokemon] = useState(null);
+  // State to store the computer's randomly selected Pokémon details
+  const [computerPokemon, setComputerPokemon] = useState(null);
 
+  // Fetch the user's Pokémon roster from the backend when the component mounts
   useEffect(() => {
     axios
       .get("https://project-10-be.onrender.com/roster")
@@ -18,12 +23,12 @@ const BattlePage = () => {
       .catch((error) => console.error(error));
   }, []);
 
-  //capturing the selected pokemon from the dropdownlist
+  // Handle change in the dropdown selection
   const handelChange = (e) => {
     setSelectPok(e.target.value);
   };
 
-  //fetch payer data
+  // Fetch details for the selected player's Pokémon from the PokéAPI
   const fetchPlayerPokemon = async () => {
     try {
       const response = await axios.get(
@@ -31,7 +36,6 @@ const BattlePage = () => {
       );
       setplayerPokemon({
         name: response.data.name,
-
         image: response.data.sprites.front_default,
       });
     } catch (error) {
@@ -42,12 +46,13 @@ const BattlePage = () => {
     }
   };
 
-  //retrieving pokemon data for pokemon selected by player playing
+  // Handle form submission to fetch the selected player's Pokémon
   const handelSubmit = (e) => {
     e.preventDefault();
     fetchPlayerPokemon();
   };
-  // Fetch a random Pokémon for the computer
+
+  // Fetch a random Pokémon for the computer and determine the winner randomly
   const fetchComputerPokemon = async () => {
     const randomId = Math.floor(Math.random() * 150) + 1; // Random Pokémon ID (1-150)
     try {
@@ -56,13 +61,13 @@ const BattlePage = () => {
       );
       setComputerPokemon({
         name: response.data.name,
-
         image: response.data.sprites.front_default,
       });
     } catch (error) {
       console.error("Error fetching computer Pokémon:", error);
     } finally {
-      let win = Math.floor(Math.random() * (2 - 1) + 2); // Random Pokémon ID (1-150)
+      // Randomly decide the winner (player or computer)
+      let win = Math.floor(Math.random() * (2 - 1) + 2);
       if (win === 1) {
         alert("player wins!");
       } else {
@@ -70,21 +75,23 @@ const BattlePage = () => {
       }
     }
   };
+
   return (
     <div className="p-10 text-center">
       <h1 className="text-3xl font-bold">Battle Page</h1>
       <p className="text-lg mt-4">Start battling with random Pokémon!</p>
-      <br></br>
-      {/*Player select's pokemon feature  */}
+      <br />
+      {/* Player selects a Pokémon from their roster */}
       <form onSubmit={handelSubmit}>
         <label>Choose a Pokemon</label>
-        <br></br>
+        <br />
         <select
           className="select select-success w-full max-w-xs"
           value={selectedPok}
           onChange={handelChange}
         >
-          <option disabled>Pick your pokemon</option>{" "}
+          <option disabled>Pick your pokemon</option>
+          {/* Render options for each Pokémon in the user's roster */}
           {myPokemonlist.map((pokemon) => (
             <>
               <option key={crypto.randomUUID()}>{pokemon.name}</option>
@@ -97,6 +104,7 @@ const BattlePage = () => {
       </form>
 
       <div className="flex justify-center">
+        {/* Display the selected player's Pokémon card */}
         {playerPokemon && (
           <div className="card bg-blue-100 w-96 shadow-xl mt-7 ">
             <div className="card-body">
@@ -114,7 +122,7 @@ const BattlePage = () => {
           </div>
         )}
 
-        {/* Computer's Pokémon */}
+        {/* Display the computer's randomly selected Pokémon card */}
         {computerPokemon && (
           <div className="card bg-blue-100 w-96 shadow-xl m-7">
             <div className="card-body">
@@ -134,15 +142,14 @@ const BattlePage = () => {
       </div>
       <div className="text-center mt-10"></div>
 
-      <br></br>
+      <br />
+      {/* Button to start the battle and fetch the computer's Pokémon */}
       <button
         onClick={fetchComputerPokemon}
         className="px-6 py-2 bg-blue-900 text-white rounded hover:bg-blue-800"
       >
         Start Battle
       </button>
-
-            
     </div>
   );
 };
