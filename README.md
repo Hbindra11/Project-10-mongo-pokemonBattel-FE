@@ -1,6 +1,6 @@
 # Pokémon Battle Frontend
 
-This project is a frontend application for a Pokémon battle game, built with **React** and **Vite**. It allows users to select Pokémon, initiate battles, and view results in a dynamic and interactive interface.
+This project is a frontend application for a Pokémon battle game, built with **React** and **Vite**. It allows users to select Pokémon, initiate battles, and view results in a dynamic and interactive interface. Players can also enter their name and score to add their results to a leaderboard.
 
 ## Features
 
