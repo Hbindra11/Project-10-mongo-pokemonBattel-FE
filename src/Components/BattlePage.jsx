@@ -1,5 +1,8 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+// Import toast from react-toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // BattlePage component handles the Pokémon battle logic and UI
 const BattlePage = () => {
@@ -23,16 +26,12 @@ const BattlePage = () => {
       .catch((error) => console.error(error));
   }, []);
 
-  // Handle change in the dropdown selection
-  const handelChange = (e) => {
-    setSelectPok(e.target.value);
-  };
-
   // Fetch details for the selected player's Pokémon from the PokéAPI
-  const fetchPlayerPokemon = async () => {
+  const fetchPlayerPokemon = async (pokemonName) => {
+    if (!pokemonName) return;
     try {
       const response = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon/${selectedPok}`
+        `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
       );
       setplayerPokemon({
         name: response.data.name,
@@ -47,13 +46,22 @@ const BattlePage = () => {
     }
   };
 
-  // Handle form submission to fetch the selected player's Pokémon
-  const handelSubmit = (e) => {
-    e.preventDefault();
-    fetchPlayerPokemon();
+  // Fetch player Pokémon whenever the selection changes
+  useEffect(() => {
+    if (selectedPok) {
+      fetchPlayerPokemon(selectedPok);
+    } else {
+      setplayerPokemon(null);
+    }
+    // eslint-disable-next-line
+  }, [selectedPok]);
+
+  // Handle change in the dropdown selection
+  const handelChange = (e) => {
+    setSelectPok(e.target.value);
   };
 
-  // Fetch a random Pokémon for the computer and determine the winner randomly
+  // Fetch a random Pokémon for the computer and then decide the winner after a delay
   const fetchComputerPokemon = async () => {
     const randomId = Math.floor(Math.random() * 150) + 1; // Random Pokémon ID (1-150)
     try {
@@ -64,16 +72,18 @@ const BattlePage = () => {
         name: response.data.name,
         image: response.data.sprites.front_default,
       });
+      console.log("Computer Pokémon fetched:", response.data);
+      // Wait a moment before deciding the winner so the user can see the computer's Pokémon
+      setTimeout(() => {
+        let win = Math.floor(Math.random() * 2); // 0 or 1
+        if (win === 1) {
+          toast.success("Player wins!");
+        } else {
+          toast.error("Computer wins!");
+        }
+      }, 1000); // 1 second delay
     } catch (error) {
       console.error("Error fetching computer Pokémon:", error);
-    } finally {
-      // Randomly decide the winner (player or computer)
-      let win = Math.floor(Math.random() * (2 - 1) + 2);
-      if (win === 1) {
-        alert("player wins!");
-      } else {
-        alert("Computer wins!");
-      }
     }
   };
 
@@ -83,27 +93,21 @@ const BattlePage = () => {
       <p className="text-lg mt-4">Start battling with random Pokémon!</p>
       <br />
       {/* Player selects a Pokémon from their roster */}
-      <form onSubmit={handelSubmit}>
-        <label>Choose a Pokemon</label>
-        <br />
-        <select
-          className="select select-success w-full max-w-xs"
-          value={selectedPok}
-          onChange={handelChange}
-        >
-          <option disabled>Pick your pokemon</option>
-          {/* Render options for each Pokémon in the user's roster */}
-          {myPokemonlist.map((pokemon) => (
-            <>
-              <option key={pokemon._id || pokemon.name}>{pokemon.name}</option>
-            </>
-          ))}
-         
-        </select>
-        <button type="submit" className="btn btn-success">
-          Select
-        </button>
-      </form>
+      <label>Choose a Pokemon</label>
+      <br />
+      <select
+        className="select select-success w-full max-w-xs"
+        value={selectedPok}
+        onChange={handelChange}
+      >
+        <option disabled value="">
+          Pick your pokemon
+        </option>
+        {/* Render options for each Pokémon in the user's roster */}
+        {myPokemonlist.map((pokemon) => (
+          <option key={pokemon._id || pokemon.name}>{pokemon.name}</option>
+        ))}
+      </select>
 
       <div className="flex justify-center">
         {/* Display the selected player's Pokémon card */}
@@ -124,9 +128,9 @@ const BattlePage = () => {
           </div>
         )}
 
-        {/* Display the computer's randomly selected Pokémon card */}
+        {/* Display the computer's randomly selected Pokémon card, styled the same as player's card */}
         {computerPokemon && (
-          <div className="card bg-blue-100 w-96 shadow-xl m-7">
+          <div className="card bg-blue-100 w-96 shadow-xl mt-7 ml-7">
             <div className="card-body">
               <h2 className="card-title">
                 Hi! I&apos;m
@@ -134,10 +138,10 @@ const BattlePage = () => {
                   {computerPokemon.name}
                 </div>
               </h2>
-              <p> The Computer&apos;s Pokémon !</p>
+              <p> And I&apos;m the Computer&apos;s Pokémon!</p>
             </div>
             <figure>
-              <img src={computerPokemon.image} alt="Player pokemon" />
+              <img src={computerPokemon.image} alt="Computer pokemon" />
             </figure>
           </div>
         )}
@@ -152,6 +156,7 @@ const BattlePage = () => {
       >
         Start Battle
       </button>
+      <ToastContainer />
     </div>
   );
 };
