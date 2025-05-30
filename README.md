@@ -6,7 +6,11 @@ This project is a frontend application for a Pokémon battle game, built with **
 
 - Browse and select Pokémon from a list
 - Initiate and simulate battles between selected Pokémon
-- View battle results 
+and see live battle simulations.  
+<br/>
+
+> **Live Demo:**  
+> [https://project-10-mongo-pokemonbattel-fe.onrender.com](https://project-10-mongo-pokemonbattel-fe.onrender.com)
 - Responsive and modern UI
 
 ## Getting Started
