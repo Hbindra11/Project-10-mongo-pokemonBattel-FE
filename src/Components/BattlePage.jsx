@@ -17,7 +17,7 @@ const BattlePage = () => {
     axios
       .get("https://project-10-be.onrender.com/roster")
       .then((res) => {
-        console.log(res.data);
+        console.log([res.data]);
         setMyPokemonlist(res.data);
       })
       .catch((error) => console.error(error));
@@ -38,6 +38,7 @@ const BattlePage = () => {
         name: response.data.name,
         image: response.data.sprites.front_default,
       });
+      console.log("Player Pokémon fetched:", response.data);
     } catch (error) {
       console.error("Error fetching player Pokémon:", error);
     } finally {
@@ -94,9 +95,10 @@ const BattlePage = () => {
           {/* Render options for each Pokémon in the user's roster */}
           {myPokemonlist.map((pokemon) => (
             <>
-              <option key={crypto.randomUUID()}>{pokemon.name}</option>
+              <option key={pokemon._id || pokemon.name}>{pokemon.name}</option>
             </>
           ))}
+         
         </select>
         <button type="submit" className="btn btn-success">
           Select

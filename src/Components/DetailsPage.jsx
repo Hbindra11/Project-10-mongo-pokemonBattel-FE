@@ -38,7 +38,7 @@ const DetailsPage = () => {
   // Function to add Pokémon to the user's roster via backend API
   const addToRoster = async () => {
     try {
-      const response = await axios.post("http://localhost:3000/roster", {
+      const response = await axios.post("https://project-10-be.onrender.com/roster", {
         name: pokemon.name,
         image: pokemon.image,
       });
