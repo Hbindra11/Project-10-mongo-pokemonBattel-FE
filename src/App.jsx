@@ -27,14 +27,20 @@ import LeaderboardPage from "./Components/LeaderboardPage";
 const App = () => {
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/details/:id" element={<DetailsPage />} />
-        <Route path="/roster" element={<RosterPage />} />
-        <Route path="/battle" element={<BattlePage />} />
-        <Route path="/leaderboard" element={<LeaderboardPage />} />
-      </Routes>
+      {/* Make Navbar fixed at the top */}
+      <div style={{ position: "fixed", top: 0, left: 0, width: "100%", zIndex: 1000 }}>
+        <Navbar />
+      </div>
+      {/* Add padding-top to prevent content from being hidden behind the fixed Navbar */}
+      <div style={{ paddingTop: "64px" }}>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/details/:id" element={<DetailsPage />} />
+          <Route path="/roster" element={<RosterPage />} />
+          <Route path="/battle" element={<BattlePage />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
+        </Routes>
+      </div>
     </Router>
   );
 };

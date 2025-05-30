@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+// Add react-toastify imports
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Component to display details of a single Pokémon
 const DetailsPage = () => {
@@ -42,13 +45,13 @@ const DetailsPage = () => {
         name: pokemon.name,
         image: pokemon.image,
       });
-      alert(response.data.message || "Pokémon added to roster!");
+      toast.success(response.data.message || "Pokémon added to roster!");
     } catch (error) {
       // Handle errors from backend
       if (error.response && error.response.data.message) {
-        alert(error.response.data.message);
+        toast.error(error.response.data.message);
       } else {
-        alert("Error adding Pokémon to roster!");
+        toast.error("Error adding Pokémon to roster!");
       }
     }
   };
@@ -125,6 +128,7 @@ const DetailsPage = () => {
           Back to Homepage
         </button>
       </div> */}
+      <ToastContainer />
     </div>
   );
 };

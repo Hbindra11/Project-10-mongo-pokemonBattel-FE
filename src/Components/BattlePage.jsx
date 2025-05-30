@@ -61,8 +61,8 @@ const BattlePage = () => {
     setSelectPok(e.target.value);
   };
 
-  // Fetch a random Pokémon for the computer and then decide the winner after a delay
-  const fetchComputerPokemon = async () => {
+  // Fetch a random Pokémon for the computer
+  const fetchRandomComputerPokemon = async () => {
     const randomId = Math.floor(Math.random() * 150) + 1; // Random Pokémon ID (1-150)
     try {
       const response = await axios.get(
@@ -73,24 +73,45 @@ const BattlePage = () => {
         image: response.data.sprites.front_default,
       });
       console.log("Computer Pokémon fetched:", response.data);
-      // Wait a moment before deciding the winner so the user can see the computer's Pokémon
-      setTimeout(() => {
-        let win = Math.floor(Math.random() * 2); // 0 or 1
-        if (win === 1) {
-          toast.success("Player wins!");
-        } else {
-          toast.error("Computer wins!");
-        }
-      }, 1000); // 1 second delay
     } catch (error) {
       console.error("Error fetching computer Pokémon:", error);
     }
   };
 
+  // Fetch computer Pokémon whenever the player selects a Pokémon, with a slight delay before displaying
+  useEffect(() => {
+    if (selectedPok) {
+      // Clear the previous computerPokemon immediately
+      setComputerPokemon(null);
+      // Add a delay before fetching and displaying the new computer Pokémon
+      const timer = setTimeout(() => {
+        fetchRandomComputerPokemon();
+      }, 700); // 700ms delay before showing computer's Pokémon
+      return () => clearTimeout(timer);
+    } else {
+      setComputerPokemon(null);
+    }
+    // eslint-disable-next-line
+  }, [selectedPok]);
+
+  // Fetch a random Pokémon for the computer and then decide the winner after a delay
+  const fetchComputerPokemon = async () => {
+    // Don't fetch a new computer Pokémon, just decide the winner
+    // Wait a moment before deciding the winner so the user can see the computer's Pokémon
+    setTimeout(() => {
+      let win = Math.floor(Math.random() * 2); // 0 or 1
+      if (win === 1) {
+        toast.success("Player wins!");
+      } else {
+        toast.error("Computer wins!");
+      }
+    }, 1000); // 1 second delay
+  };
+
   return (
     <div className="p-10 text-center">
       <h1 className="text-3xl font-bold">Battle Page</h1>
-      <p className="text-lg mt-4">Start battling with random Pokémon!</p>
+      <p className="text-lg mt-4">Start battling with a random Pokémon and may the lucky one win!</p>
       <br />
       {/* Player selects a Pokémon from their roster */}
       <label>Choose a Pokemon</label>
@@ -120,7 +141,7 @@ const BattlePage = () => {
                   {playerPokemon.name}
                 </div>
               </h2>
-              <p> And I&apos;m ready to fight!</p>
+              <p> And I&apos;m your Pokémon ready to fight!</p>
             </div>
             <figure>
               <img src={playerPokemon.image} alt="Player pokemon" />

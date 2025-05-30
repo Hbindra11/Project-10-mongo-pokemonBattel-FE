@@ -1,7 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // LeaderboardPage component
 const LeaderboardPage = () => {
@@ -9,7 +10,8 @@ const LeaderboardPage = () => {
   const [score, setScore] = useState([]);
   // State to hold new score input
   const [newScore, setNewScore] = useState([]);
-  const navigate = useNavigate();
+  // State to track loading status
+  const [loading, setLoading] = useState(true);
 
   // Fetch leaderboard data on mount
   useEffect(() => {
@@ -18,8 +20,12 @@ const LeaderboardPage = () => {
       .then((res) => {
         console.log(res.data);
         setScore(res.data);
+        setLoading(false);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
   }, []);
 
   // Handle input changes for new score form
@@ -35,19 +41,29 @@ const LeaderboardPage = () => {
       .post("https://project-10-be.onrender.com/leaderboard", newScore)
       .then((res) => {
         console.log("here is the response: " + res.data);
-        alert("data was successfully saved!");
+        toast.success("Data was successfully saved!");
         setNewScore([]);
+        // Close the modal dialog after successful save
+        document.getElementById("my_modal_3").close();
+        // Optionally, refresh the leaderboard
+        axios
+          .get("https://project-10-be.onrender.com/leaderboard")
+          .then((res) => setScore(res.data));
       })
       .catch((err) => {
         console.error("error message: " + err);
-        alert("oops! something went wrong!");
+        toast.error("Oops! Something went wrong!");
+        // Close the modal dialog even if there's an error
+        document.getElementById("my_modal_3").close();
       });
-    navigate("/");
+    // Do not navigate away, stay on the same page
   };
 
   return (
     <>
-      {
+      {loading ? (
+        <div className="text-center text-xl mt-10">Loading data...</div>
+      ) : (
         // Main container
         <div className="p-10 text-center">
           <h1 className="text-3xl font-bold">Leaderboard</h1>
@@ -75,7 +91,7 @@ const LeaderboardPage = () => {
 
           {/* Button to open modal for adding a new score */}
           <button
-            className="btn"
+            className="px-6 py-2 bg-blue-900 text-white rounded hover:bg-blue-800"
             onClick={() => document.getElementById("my_modal_3").showModal()}
           >
             Add Score
@@ -112,7 +128,7 @@ const LeaderboardPage = () => {
                 </label>
                 <br></br>
                 {/* Submit button */}
-                <button type="submit" className="btn btn-success">
+                <button type="submit" className="px-6 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
                   Save
                 </button>
               </form>
@@ -120,7 +136,8 @@ const LeaderboardPage = () => {
             </div>
           </dialog>
         </div>
-      }
+      )}
+      <ToastContainer />
     </>
   );
 };
