@@ -7,6 +7,8 @@ import Hero from "./Hero";
 const Homepage = () => {
   // State to store the list of Pokémon with their names and images
   const [pokemonList, setPokemonList] = useState([]);
+  // State to track loading status
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Fetch the list of Pokémon (first 150)
@@ -22,10 +24,20 @@ const Homepage = () => {
         );
 
         // Wait for all Pokémon details to be fetched, then update state
-        Promise.all(fetchDetails).then((details) => setPokemonList(details));
+        Promise.all(fetchDetails).then((details) => {
+          setPokemonList(details);
+          setLoading(false);
+        });
       })
-      .catch((error) => console.error("Error fetching Pokémon:", error));
+      .catch((error) => {
+        console.error("Error fetching Pokémon:", error);
+        setLoading(false);
+      });
   }, []);
+
+  if (loading) {
+    return <div className="p-10 text-center text-xl">Loading data...</div>;
+  }
 
   return (
     <div className="p-10">

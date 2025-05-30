@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RosterPage = () => {
   const [roster, setRoster] = useState([]); // Holds the roster data
@@ -24,10 +26,10 @@ const RosterPage = () => {
     try {
       await axios.delete(`https://project-10-be.onrender.com/roster/${id}`); // Send DELETE request to backend
       setRoster(roster.filter((pokemon) => pokemon._id !== id)); // Remove Pokémon from local state
-      alert("Pokémon removed from roster!");
+      toast.success("Pokémon removed from roster!");
     } catch (error) {
       console.error("Error removing Pokémon:", error);
-      alert("Failed to remove Pokémon from roster!");
+      toast.error("Failed to remove Pokémon from roster!");
     }
   };
 
@@ -62,6 +64,7 @@ const RosterPage = () => {
           </div>
         ))}
       </div>
+      <ToastContainer />
     </div>
   );
 };
